@@ -10,8 +10,9 @@ class Place {
   final String mobileNumber;
   final String email;
   final Social social;
+  final List<String> images;
 
-  Place({
+  const Place({
     @required this.id,
     @required this.name,
     @required this.desciption,
@@ -21,6 +22,7 @@ class Place {
     @required this.mobileNumber,
     @required this.email,
     @required this.social,
+    @required this.images,
   });
 
   factory Place.fromJson(Map<String, dynamic> json) {
@@ -34,6 +36,7 @@ class Place {
       mobileNumber: json['mobileNumber'],
       email: json['email'],
       social: Social.fromJson(json['social']),
+      images: json["images"],
     );
   }
 
@@ -48,44 +51,59 @@ class Place {
     data['mobileNumber'] = this.mobileNumber;
     data['email'] = this.email;
     data['social'] = this.social.toJson();
+    data['images'] = this.images;
     return data;
   }
 }
+
+const intToDay = [
+  "Monday",
+  "Tuesday",
+  "Wednesday",
+  "Thursday",
+  "Friday",
+  "Saturday",
+  "Sunday",
+];
 
 class OpenHours {
-  List<Days> days;
+  final List<Day> days;
 
-  OpenHours({this.days});
+  const OpenHours({this.days});
 
-  OpenHours.fromJson(Map<String, dynamic> json) {
-    if (json['days'] != null) {
-      days = new List<Days>();
-      json['days'].forEach((v) {
-        days.add(new Days.fromJson(v));
-      });
-    }
+  factory OpenHours.fromJson(List<dynamic> json) {
+    List<Day> days;
+
+    json.forEach((v) {
+      days.add(Day.fromJson(v));
+    });
+
+    return OpenHours(days: days);
   }
 
-  Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    if (this.days != null) {
-      data['days'] = this.days.map((v) => v.toJson()).toList();
-    }
-    return data;
+  List<Map<String, dynamic>> toJson() {
+    return this.days.map((v) => v.toJson()).toList();
+  }
+
+  String opensTodayFrom() {
+    var now = DateTime.now();
+    return days.firstWhere((day) => day.name == intToDay[now.weekday - 1]).from;
   }
 }
 
-class Days {
-  String name;
-  int from;
-  int to;
+class Day {
+  final String name;
+  final String from;
+  final String to;
 
-  Days({this.name, this.from, this.to});
+  const Day({this.name, this.from, this.to});
 
-  Days.fromJson(Map<String, dynamic> json) {
-    name = json['name'];
-    from = json['from'];
-    to = json['to'];
+  factory Day.fromJson(Map<String, dynamic> json) {
+    return Day(
+      name: json['name'],
+      from: json['from'],
+      to: json['to'],
+    );
   }
 
   Map<String, dynamic> toJson() {
@@ -101,7 +119,7 @@ class Location {
   final double latitude;
   final double longitude;
 
-  Location({
+  const Location({
     @required this.latitude,
     @required this.longitude,
   });
@@ -126,7 +144,7 @@ class Social {
   final String instagram;
   final String tripadvisor;
 
-  Social({
+  const Social({
     @required this.facebook,
     @required this.instagram,
     @required this.tripadvisor,

@@ -7,17 +7,16 @@ main() {
       "id": "f4815217-118d-43df-9c42-9e0c26a32ff4",
       "name": "wh",
       "desciption": "test",
-      "openHours": {
-        "days": [
-          {"name": "Monday", "from": 0, "to": 10},
-          {"name": "Tuesday", "from": 0, "to": 10},
-          {"name": "Wednesday", "from": 0, "to": 10},
-          {"name": "Thursday", "from": 0, "to": 10},
-          {"name": "Friday", "from": 0, "to": 10},
-          {"name": "Saturday", "from": 0, "to": 10},
-          {"name": "Sunday", "from": 0, "to": 10},
-        ]
-      },
+      "images": [],
+      "openHours": [
+        {"name": "Monday", "from": "5am", "to": "12pm"},
+        {"name": "Tuesday", "from": "5am", "to": "12pm"},
+        {"name": "Wednesday", "from": "5am", "to": "12pm"},
+        {"name": "Thursday", "from": "5am", "to": "12pm"},
+        {"name": "Friday", "from": "5am", "to": "12pm"},
+        {"name": "Saturday", "from": "5am", "to": "12pm"},
+        {"name": "Sunday", "from": "5am", "to": "12pm"},
+      ],
       "address": "add res s",
       "localtion": {"latitude": 20.0, "longitude": 50.1},
       "mobileNumber": "+42024323",
