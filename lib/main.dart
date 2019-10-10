@@ -28,19 +28,20 @@ class MyApp extends StatelessWidget {
         theme: ThemeData(
           fontFamily: 'DINNext',
           textTheme: textTheme.copyWith(
-              headline: textTheme.headline.copyWith(
-                fontSize: 35,
-                fontWeight: FontWeight.w600,
-                color: Colors.white,
-              ),
-              subhead: textTheme.subhead.copyWith(
-                fontWeight: FontWeight.w500,
-                fontSize: 20,
-                color: Colors.white,
-              ),
-              body1: textTheme.body1.copyWith(
-                fontSize: 18,
-              )),
+            headline: textTheme.headline.copyWith(
+              fontSize: 35,
+              fontWeight: FontWeight.w600,
+              color: Colors.white,
+            ),
+            subhead: textTheme.subhead.copyWith(
+              fontWeight: FontWeight.w500,
+              fontSize: 20,
+              color: Colors.white,
+            ),
+            body1: textTheme.body1.copyWith(
+              fontSize: 18,
+            ),
+          ),
           primarySwatch: Colors.blue,
         ),
         onGenerateRoute: onGenerateRoute,

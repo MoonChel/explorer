@@ -112,7 +112,7 @@ class PlaceDetailsWidget extends StatelessWidget {
                 SizedBox(height: 10),
                 Text("SOCIAL MEDIA", style: textTheme.title),
                 SizedBox(height: 10),
-                buildSocialRow()
+                buildSocialRow(),
               ],
             ),
           )

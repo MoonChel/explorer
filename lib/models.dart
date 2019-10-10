@@ -1,55 +1,57 @@
-import 'dart:core';
-
-import 'package:flutter/foundation.dart';
 import 'package:intl/intl.dart';
 
 class Place {
-  final String id;
-  final String name;
-  final String subtitle;
-  final String desciption;
-  final PlaceIcon icon;
-  final OpenHours openHours;
-  final PlaceAddress address;
-  final Location localtion;
-  final String mobileNumber;
-  final String email;
-  final Social social;
-  final List<String> images;
-  final ColorSettings colorSettings;
+  String id;
+  String name;
+  String subtitle;
+  String desciption;
+  Address address;
+  PlaceIcon icon;
+  ColorSettings colorSettings;
+  List<String> images;
+  OpenHours openHours;
+  Localtion localtion;
+  String mobileNumber;
+  String email;
+  Social social;
 
-  const Place({
-    @required this.id,
-    @required this.name,
-    @required this.subtitle,
-    @required this.desciption,
-    @required this.icon,
-    @required this.openHours,
-    @required this.address,
-    @required this.localtion,
-    @required this.mobileNumber,
-    @required this.email,
-    @required this.social,
-    @required this.images,
-    @required this.colorSettings,
-  });
+  Place(
+      {this.id,
+      this.name,
+      this.subtitle,
+      this.desciption,
+      this.address,
+      this.icon,
+      this.colorSettings,
+      this.images,
+      this.openHours,
+      this.localtion,
+      this.mobileNumber,
+      this.email,
+      this.social});
 
-  factory Place.fromJson(Map<String, dynamic> json) {
-    return Place(
-      id: json['id'],
-      name: json['name'],
-      subtitle: json['subtitle'],
-      desciption: json['desciption'],
-      icon: PlaceIcon.fromJson(json['icon']),
-      openHours: OpenHours.fromJson(json['openHours']),
-      address: json['address'],
-      localtion: Location.fromJson(json['localtion']),
-      mobileNumber: json['mobileNumber'],
-      email: json['email'],
-      social: Social.fromJson(json['social']),
-      images: json['images'],
-      colorSettings: ColorSettings.fromJson(json['colorSettings']),
-    );
+  Place.fromJson(Map<String, dynamic> json) {
+    id = json['id'];
+    name = json['name'];
+    subtitle = json['subtitle'];
+    desciption = json['desciption'];
+    address =
+        json['address'] != null ? new Address.fromJson(json['address']) : null;
+    icon = json['icon'] != null ? new PlaceIcon.fromJson(json['icon']) : null;
+    colorSettings = json['colorSettings'] != null
+        ? new ColorSettings.fromJson(json['colorSettings'])
+        : null;
+    images = json['images'].cast<String>();
+    openHours = json['openHours'] != null
+        ? new OpenHours.fromJson(json['openHours'])
+        : null;
+    localtion = json['localtion'] != null
+        ? new Localtion.fromJson(json['localtion'])
+        : null;
+    mobileNumber = json['mobileNumber'];
+    email = json['email'];
+    social =
+        json['social'] != null ? new Social.fromJson(json['social']) : null;
   }
 
   Map<String, dynamic> toJson() {
@@ -58,33 +60,53 @@ class Place {
     data['name'] = this.name;
     data['subtitle'] = this.subtitle;
     data['desciption'] = this.desciption;
-    data['icon'] = this.icon;
-    data['openHours'] = this.openHours.toJson();
-    data['address'] = this.address;
-    data['localtion'] = this.localtion.toJson();
+    if (this.address != null) {
+      data['address'] = this.address.toJson();
+    }
+    if (this.icon != null) {
+      data['icon'] = this.icon.toJson();
+    }
+    if (this.colorSettings != null) {
+      data['colorSettings'] = this.colorSettings.toJson();
+    }
+    data['images'] = this.images;
+    if (this.openHours != null) {
+      data['openHours'] = this.openHours.toJson();
+    }
+    if (this.localtion != null) {
+      data['localtion'] = this.localtion.toJson();
+    }
     data['mobileNumber'] = this.mobileNumber;
     data['email'] = this.email;
-    data['social'] = this.social.toJson();
-    data['images'] = this.images;
+    if (this.social != null) {
+      data['social'] = this.social.toJson();
+    }
     return data;
   }
 }
 
-class PlaceAddress {
-  final String city;
-  final String street;
-  final String postIndex;
-  final String country;
+class Address {
+  String city;
+  String street;
+  String postIndex;
+  String country;
 
-  const PlaceAddress({this.city, this.country, this.postIndex, this.street});
+  Address({this.city, this.street, this.postIndex, this.country});
 
-  factory PlaceAddress.fromJson(Map<String, dynamic> json) {
-    return PlaceAddress(
-      city: json['city'],
-      street: json['street'],
-      postIndex: json['postIndex'],
-      country: json['country'],
-    );
+  Address.fromJson(Map<String, dynamic> json) {
+    city = json['city'];
+    street = json['street'];
+    postIndex = json['postIndex'];
+    country = json['country'];
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+    data['city'] = this.city;
+    data['street'] = this.street;
+    data['postIndex'] = this.postIndex;
+    data['country'] = this.country;
+    return data;
   }
 
   String get shortAddress {
@@ -97,70 +119,79 @@ class PlaceAddress {
 }
 
 class PlaceIcon {
-  final String url;
-  final bool isSVG;
-  final int colorHex;
+  bool isSVG;
+  String url;
+  int colorHex;
 
-  const PlaceIcon({
-    this.url,
-    this.colorHex = 0xffffffff,
-    this.isSVG = false,
-  });
+  PlaceIcon({this.isSVG, this.url, this.colorHex});
 
-  factory PlaceIcon.fromJson(Map<String, dynamic> json) {
-    return PlaceIcon(
-      url: json["url"],
-      isSVG: json["isSWG"],
-    );
+  PlaceIcon.fromJson(Map<String, dynamic> json) {
+    isSVG = json['isSVG'];
+    url = json['url'];
+    colorHex = int.parse(json['colorHex']);
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+    data['isSVG'] = this.isSVG;
+    data['url'] = this.url;
+    data['colorHex'] = this.colorHex;
+    return data;
   }
 }
 
 class ColorSettings {
-  final int headerColorHex;
-  final int bodyColorHex;
-  final int fontColor;
+  int headerColorHex;
+  int bodyColorHex;
+  int fontColor;
 
-  const ColorSettings({
-    @required this.headerColorHex,
-    @required this.bodyColorHex,
-    this.fontColor = 0xffffffff,
-  });
+  ColorSettings({this.headerColorHex, this.bodyColorHex, this.fontColor});
 
-  factory ColorSettings.fromJson(Map<String, dynamic> json) {
-    return ColorSettings(
-      headerColorHex: int.parse(json['headerColorHex']),
-      bodyColorHex: int.parse(json['bodyColorHex']),
-    );
+  ColorSettings.fromJson(Map<String, dynamic> json) {
+    headerColorHex = int.parse(json['headerColorHex']);
+    bodyColorHex = int.parse(json['bodyColorHex']);
+    fontColor = int.parse(json['fontColor']);
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+    data['headerColorHex'] = this.headerColorHex.toString();
+    data['bodyColorHex'] = this.bodyColorHex.toString();
+    data['fontColor'] = this.fontColor.toString();
+    return data;
   }
 }
 
-const intToDay = [
-  'Monday',
-  'Tuesday',
-  'Wednesday',
-  'Thursday',
-  'Friday',
-  'Saturday',
-  'Sunday',
-];
-
 class OpenHours {
-  final List<Day> days;
+  List<Days> days;
 
-  const OpenHours({this.days});
+  OpenHours({this.days});
 
-  factory OpenHours.fromJson(List<dynamic> json) {
-    List<Day> days;
-
-    json.forEach((v) {
-      days.add(Day.fromJson(v));
-    });
-
-    return OpenHours(days: days);
+  OpenHours.fromJson(Map<String, dynamic> json) {
+    if (json['days'] != null) {
+      days = new List<Days>();
+      json['days'].forEach((v) {
+        days.add(new Days.fromJson(v));
+      });
+    }
   }
 
-  List<Map<String, dynamic>> toJson() {
-    return this.days.map((v) => v.toJson()).toList();
+  get intToDay => [
+        "Monday",
+        "Tuesday",
+        "Wednesday",
+        "Thursday",
+        "Friday",
+        "Saturday",
+        "Sunday",
+      ];
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+    if (this.days != null) {
+      data['days'] = this.days.map((v) => v.toJson()).toList();
+    }
+    return data;
   }
 
   String opensTodayFrom() {
@@ -169,19 +200,17 @@ class OpenHours {
   }
 }
 
-class Day {
-  final String name;
-  final String from;
-  final String to;
+class Days {
+  String name;
+  String from;
+  String to;
 
-  const Day({this.name, this.from, this.to});
+  Days({this.name, this.from, this.to});
 
-  factory Day.fromJson(Map<String, dynamic> json) {
-    return Day(
-      name: json['name'],
-      from: json['from'],
-      to: json['to'],
-    );
+  Days.fromJson(Map<String, dynamic> json) {
+    name = json['name'];
+    from = json['from'];
+    to = json['to'];
   }
 
   Map<String, dynamic> toJson() {
@@ -205,54 +234,43 @@ class Day {
   }
 }
 
-class Location {
-  final double latitude;
-  final double longitude;
+class Localtion {
+  double latitude;
+  double longitude;
 
-  const Location({
-    @required this.latitude,
-    @required this.longitude,
-  });
+  Localtion({this.latitude, this.longitude});
 
-  factory Location.fromJson(Map<String, dynamic> json) {
-    return Location(
-      latitude: json['latitude'],
-      longitude: json['longitude'],
-    );
+  Localtion.fromJson(Map<String, dynamic> json) {
+    latitude = json['latitude'];
+    longitude = json['longitude'];
   }
 
   Map<String, dynamic> toJson() {
-    return {
-      'latitude': this.latitude,
-      'longitude': this.longitude,
-    };
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+    data['latitude'] = this.latitude;
+    data['longitude'] = this.longitude;
+    return data;
   }
 }
 
 class Social {
-  final String facebook;
-  final String instagram;
-  final String tripadvisor;
+  String facebook;
+  String instagram;
+  String tripadvisor;
 
-  const Social({
-    @required this.facebook,
-    @required this.instagram,
-    @required this.tripadvisor,
-  });
+  Social({this.facebook, this.instagram, this.tripadvisor});
 
-  factory Social.fromJson(Map<String, dynamic> json) {
-    return Social(
-      facebook: json['facebook'],
-      instagram: json['instagram'],
-      tripadvisor: json['tripadvisor'],
-    );
+  Social.fromJson(Map<String, dynamic> json) {
+    facebook = json['facebook'];
+    instagram = json['instagram'];
+    tripadvisor = json['tripadvisor'];
   }
 
   Map<String, dynamic> toJson() {
-    return {
-      'facebook': this.facebook,
-      'instagram': this.instagram,
-      'tripadvisor': this.tripadvisor,
-    };
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+    data['facebook'] = this.facebook;
+    data['instagram'] = this.instagram;
+    data['tripadvisor'] = this.tripadvisor;
+    return data;
   }
 }
