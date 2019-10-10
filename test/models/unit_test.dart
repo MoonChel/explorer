@@ -7,7 +7,13 @@ main() {
       "id": "f4815217-118d-43df-9c42-9e0c26a32ff4",
       "name": "wh",
       "desciption": "test",
-      "images": [],
+      "images": [
+        "https://www.whiskeyprovsechny.cz/images/foto_6_big.jpg",
+        "https://www.whiskeyprovsechny.cz/images/foto_2_big.jpg",
+        "https://www.whiskeyprovsechny.cz/images/foto_7_big.jpg",
+        "https://www.whiskeyprovsechny.cz/images/foto_4_big.jpg",
+        "https://www.whiskeyprovsechny.cz/images/foto_1_big.jpg",
+      ],
       "openHours": [
         {"name": "Monday", "from": "5am", "to": "12pm"},
         {"name": "Tuesday", "from": "5am", "to": "12pm"},
