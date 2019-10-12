@@ -23,7 +23,9 @@ class PlaceDetailsPage extends StatelessWidget {
     return Theme(
       data: globalTheme.copyWith(
         appBarTheme: globalTheme.appBarTheme.copyWith(
-          color: Color(place.colorSettings.headerColorHex),
+          color: Color(
+            place.colorSettings.headerColorHex,
+          ),
         ),
         scaffoldBackgroundColor: Color(place.colorSettings.bodyColorHex),
         iconTheme: globalTheme.iconTheme.copyWith(
@@ -59,8 +61,6 @@ class PlaceDetailsWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    var textTheme = Theme.of(context).textTheme;
-
     return Scaffold(
       appBar: AppBarPlaceDetailsPage(place: place),
       body: ListView(
@@ -72,51 +72,101 @@ class PlaceDetailsWidget extends StatelessWidget {
           ),
           Padding(
             padding: EdgeInsets.all(Constants.bodyPadding),
-            child: Column(
-              mainAxisSize: MainAxisSize.max,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: <Widget>[
-                Text("ABOUT US", style: textTheme.title),
-                Text(place.desciption),
-                SizedBox(height: 10),
-                Text("OPEN HOURS", style: textTheme.title),
-                Text.rich(
-                  TextSpan(
-                    children: place.openHours.days
-                        .map((day) => TextSpan(text: "$day \n"))
-                        .toList(),
-                  ),
-                ),
-                Text("ADDITIONAL DETAILS", style: textTheme.title),
-                SizedBox(height: 5),
-                buildInfoRow(
-                  Icons.place,
-                  Text.rich(
-                    TextSpan(
-                      children: [
-                        TextSpan(text: place.address.street),
-                        TextSpan(text: "\n"),
-                        TextSpan(text: place.address.postIndex),
-                        TextSpan(text: "\n"),
-                        TextSpan(text: place.address.city),
-                        TextSpan(text: "\n"),
-                        TextSpan(text: place.address.country),
-                      ],
-                    ),
-                  ),
-                ),
-                SizedBox(height: 10),
-                buildInfoRow(Icons.phone, Text(place.mobileNumber)),
-                SizedBox(height: 10),
-                buildInfoRow(Icons.email, Text(place.email)),
-                SizedBox(height: 10),
-                Text("SOCIAL MEDIA", style: textTheme.title),
-                SizedBox(height: 10),
-                buildSocialRow(),
-              ],
-            ),
+            child: AnimatedPageDetailsBody(place: place),
           )
         ],
+      ),
+    );
+  }
+}
+
+class AnimatedPageDetailsBody extends StatefulWidget {
+  const AnimatedPageDetailsBody({
+    Key key,
+    @required this.place,
+  }) : super(key: key);
+
+  final Place place;
+
+  @override
+  _AnimatedPageDetailsBodyState createState() =>
+      _AnimatedPageDetailsBodyState();
+}
+
+class _AnimatedPageDetailsBodyState extends State<AnimatedPageDetailsBody>
+    with SingleTickerProviderStateMixin {
+  AnimationController _animationController;
+  Animation<Offset> slideAnim;
+  Animation<double> opacityAnim;
+
+  @override
+  void initState() {
+    super.initState();
+    _animationController = AnimationController(
+      vsync: this,
+      duration: Duration(milliseconds: 600),
+    );
+    slideAnim = Tween(
+      begin: Offset(0.1, 0.0),
+      end: Offset.zero,
+    ).animate(_animationController);
+
+    opacityAnim = Tween(begin: 0.0, end: 1.0).animate(_animationController);
+
+    _animationController.forward();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    var textTheme = Theme.of(context).textTheme;
+
+    return FadeTransition(
+      opacity: opacityAnim,
+      child: SlideTransition(
+        position: slideAnim,
+        child: Column(
+          mainAxisSize: MainAxisSize.max,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: <Widget>[
+            Text("ABOUT US", style: textTheme.title),
+            Text(widget.place.desciption),
+            SizedBox(height: 10),
+            Text("OPEN HOURS", style: textTheme.title),
+            Text.rich(
+              TextSpan(
+                children: widget.place.openHours.days
+                    .map((day) => TextSpan(text: "$day \n"))
+                    .toList(),
+              ),
+            ),
+            Text("ADDITIONAL DETAILS", style: textTheme.title),
+            SizedBox(height: 5),
+            buildInfoRow(
+              Icons.place,
+              Text.rich(
+                TextSpan(
+                  children: [
+                    TextSpan(text: widget.place.address.street),
+                    TextSpan(text: "\n"),
+                    TextSpan(text: widget.place.address.postIndex),
+                    TextSpan(text: "\n"),
+                    TextSpan(text: widget.place.address.city),
+                    TextSpan(text: "\n"),
+                    TextSpan(text: widget.place.address.country),
+                  ],
+                ),
+              ),
+            ),
+            SizedBox(height: 10),
+            buildInfoRow(Icons.phone, Text(widget.place.mobileNumber)),
+            SizedBox(height: 10),
+            buildInfoRow(Icons.email, Text(widget.place.email)),
+            SizedBox(height: 10),
+            Text("SOCIAL MEDIA", style: textTheme.title),
+            SizedBox(height: 10),
+            buildSocialRow(),
+          ],
+        ),
       ),
     );
   }
@@ -125,28 +175,28 @@ class PlaceDetailsWidget extends StatelessWidget {
     return Row(
       mainAxisAlignment: MainAxisAlignment.start,
       children: <Widget>[
-        new CircularButton(
-            color: Color(place.colorSettings.headerColorHex),
+        CircularButton(
+            color: Color(widget.place.colorSettings.headerColorHex),
             child: Icon(
               FontAwesomeIcons.facebookF,
               color: Colors.white,
             ),
             onPressed: () async {
-              await launchURL(place.social.facebook);
+              await launchURL(widget.place.social.facebook);
             }),
         SizedBox(width: 10),
-        new CircularButton(
-            color: Color(place.colorSettings.headerColorHex),
+        CircularButton(
+            color: Color(widget.place.colorSettings.headerColorHex),
             child: Icon(
               FontAwesomeIcons.instagram,
               color: Colors.white,
             ),
             onPressed: () async {
-              await launchURL(place.social.instagram);
+              await launchURL(widget.place.social.instagram);
             }),
         SizedBox(width: 10),
-        new CircularButton(
-            color: Color(place.colorSettings.headerColorHex),
+        CircularButton(
+            color: Color(widget.place.colorSettings.headerColorHex),
             child: Padding(
               padding: const EdgeInsets.only(right: 3.0),
               child: Icon(
@@ -155,7 +205,7 @@ class PlaceDetailsWidget extends StatelessWidget {
               ),
             ),
             onPressed: () async {
-              await launchURL(place.social.tripadvisor);
+              await launchURL(widget.place.social.tripadvisor);
             }),
       ],
     );

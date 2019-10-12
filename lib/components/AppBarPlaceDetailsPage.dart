@@ -1,7 +1,6 @@
 import 'package:explorer/constants.dart';
 import 'package:explorer/models.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 import 'package:transparent_image/transparent_image.dart';
 
 class AppBarPlaceDetailsPage extends StatelessWidget
@@ -15,8 +14,6 @@ class AppBarPlaceDetailsPage extends StatelessWidget
 
   @override
   Widget build(BuildContext context) {
-    var textTheme = Theme.of(context).textTheme;
-
     return AppBar(
       flexibleSpace: FlexibleSpaceBar(
         centerTitle: false,
@@ -24,30 +21,13 @@ class AppBarPlaceDetailsPage extends StatelessWidget
         title: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: <Widget>[
-            RichText(
-              text: TextSpan(
-                children: [
-                  TextSpan(text: place.name, style: textTheme.headline),
-                  TextSpan(text: "\n"),
-                  TextSpan(text: place.subtitle, style: textTheme.subhead)
-                ],
-              ),
-            ),
-            if (place.icon.isSVG)
-              SvgPicture.network(
-                place.icon.url,
-                color: Color(place.icon.colorHex),
-                width: Constants.placeIconSize,
-                height: Constants.placeIconSize,
-                placeholderBuilder: (context) => Container(),
-              )
-            else
-              FadeInImage.memoryNetwork(
-                placeholder: kTransparentImage,
-                image: place.icon.url,
-                width: Constants.placeIconSize,
-                height: Constants.placeIconSize,
-              )
+            AnimatedPlaceName(place: place),
+            FadeInImage.memoryNetwork(
+              placeholder: kTransparentImage,
+              image: place.icon.url,
+              width: Constants.placeIconSize,
+              height: Constants.placeIconSize,
+            )
           ],
         ),
       ),
@@ -56,4 +36,49 @@ class AppBarPlaceDetailsPage extends StatelessWidget
 
   @override
   Size get preferredSize => Constants.appBarHeight;
+}
+
+class AnimatedPlaceName extends StatefulWidget {
+  const AnimatedPlaceName({
+    Key key,
+    @required this.place,
+  }) : super(key: key);
+
+  final Place place;
+
+  @override
+  _AnimatedPlaceNameState createState() => _AnimatedPlaceNameState();
+}
+
+class _AnimatedPlaceNameState extends State<AnimatedPlaceName>
+    with SingleTickerProviderStateMixin {
+  AnimationController _animationController;
+  Animation opacityAnim;
+
+  @override
+  void initState() {
+    super.initState();
+    _animationController =
+        AnimationController(vsync: this, duration: Duration(seconds: 1));
+    opacityAnim = Tween(begin: 0.0, end: 1.0).animate(_animationController);
+    _animationController.forward();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    var textTheme = Theme.of(context).textTheme;
+
+    return FadeTransition(
+      opacity: opacityAnim,
+      child: RichText(
+        text: TextSpan(
+          children: [
+            TextSpan(text: widget.place.name, style: textTheme.headline),
+            TextSpan(text: "\n"),
+            TextSpan(text: widget.place.subtitle, style: textTheme.subhead)
+          ],
+        ),
+      ),
+    );
+  }
 }

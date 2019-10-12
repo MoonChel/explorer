@@ -13,7 +13,7 @@ class Constants {
 
   static const borderRadius = 10.0;
 
-  static const placeIconSize = 50.0;
+  static const placeIconSize = 70.0;
 
   static const bodyPadding = 20.0;
 

@@ -119,22 +119,22 @@ class Address {
 }
 
 class PlaceIcon {
-  bool isSVG;
   String url;
+  String darkUrl;
   int colorHex;
 
-  PlaceIcon({this.isSVG, this.url, this.colorHex});
+  PlaceIcon({this.url, this.colorHex});
 
   PlaceIcon.fromJson(Map<String, dynamic> json) {
-    isSVG = json['isSVG'];
     url = json['url'];
-    colorHex = int.parse(json['colorHex']);
+    darkUrl = json['darkUrl'];
+    colorHex = json['colorHex'] != null ? int.parse(json['colorHex']) : null;
   }
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['isSVG'] = this.isSVG;
     data['url'] = this.url;
+    data['darkUrl'] = this.darkUrl;
     data['colorHex'] = this.colorHex;
     return data;
   }

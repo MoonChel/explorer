@@ -1,8 +1,9 @@
 import 'package:explorer/components/CircularButton.dart';
+import 'package:explorer/providers.dart';
 import 'package:flutter/material.dart';
 
 import 'package:explorer/constants.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:provider/provider.dart';
 
 class AppBarHomePage extends StatelessWidget implements PreferredSizeWidget {
   const AppBarHomePage({
@@ -19,6 +20,7 @@ class AppBarHomePage extends StatelessWidget implements PreferredSizeWidget {
         titlePadding: Constants.appBarPadding,
         title: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          crossAxisAlignment: CrossAxisAlignment.end,
           children: <Widget>[
             RichText(
               text: TextSpan(
@@ -32,14 +34,33 @@ class AppBarHomePage extends StatelessWidget implements PreferredSizeWidget {
                 ],
               ),
             ),
-            CircularButton(
-              child: Image.asset(
-                'assets/Icons/placeholder.png',
-                width: 60,
-                height: 60,
-              ),
-              padding: 0,
-              onPressed: () {},
+            Consumer<PlaceViewSwitchProvider>(
+              builder: (ctx, provider, child) {
+                if (provider.isListView) {
+                  return CircularButton(
+                    child: Image.asset(
+                      'assets/Icons/placeholder.png',
+                      width: 60,
+                      height: 60,
+                    ),
+                    padding: 0,
+                    onPressed: () {
+                      provider.isListView = false;
+                    },
+                  );
+                }
+                return CircularButton(
+                  child: Image.asset(
+                    'assets/Icons/list.png',
+                    width: 60,
+                    height: 60,
+                  ),
+                  padding: 0,
+                  onPressed: () {
+                    provider.isListView = true;
+                  },
+                );
+              },
             ),
           ],
         ),

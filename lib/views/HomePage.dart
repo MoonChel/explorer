@@ -5,43 +5,42 @@ import 'package:provider/provider.dart';
 import 'package:explorer/providers.dart';
 import 'package:explorer/components/_all.dart';
 
-import 'package:explorer/views/_all.dart';
-
-class HomePage extends StatelessWidget {
+class HomePage extends StatefulWidget {
   static const routeName = '/';
 
   @override
+  _HomePageState createState() => _HomePageState();
+}
+
+class _HomePageState extends State<HomePage> {
+  @override
   Widget build(BuildContext context) {
     var placeProvider = Provider.of<PlaceProvider>(context);
-
-    return Scaffold(
-      appBar: AppBarHomePage(),
-      body: FutureBuilder(
-        future: placeProvider.fetchPlaces(),
-        initialData: [],
-        builder: (BuildContext context, AsyncSnapshot snapshot) {
-          if (snapshot.connectionState == ConnectionState.done) {
-            return ListView.builder(
-              itemCount: placeProvider.places.length,
-              itemBuilder: (BuildContext context, int index) {
-                return PlaceCardWidget(
-                  key: Key(placeProvider.places[index].id),
-                  place: placeProvider.places[index],
-                  onTap: () {
-                    Navigator.of(context).pushNamed(
-                      PlaceDetailsPage.routeName,
-                      arguments: placeProvider.places[index],
-                    );
-                  },
-                );
-              },
-            );
-          }
+    return FutureBuilder(
+      future: placeProvider.fetchPlaces(),
+      initialData: [],
+      builder: (BuildContext context, AsyncSnapshot snapshot) {
+        if (snapshot.connectionState == ConnectionState.waiting) {
           return Center(
             child: CircularProgressIndicator(),
           );
-        },
-      ),
+        }
+        return ChangeNotifierProvider<PlaceViewSwitchProvider>(
+          builder: (cxt) => PlaceViewSwitchProvider(),
+          child: Scaffold(
+            appBar: AppBarHomePage(),
+            body: Consumer<PlaceViewSwitchProvider>(
+              builder: (ctx, provider, child) {
+                if (provider.isListView) {
+                  return child;
+                }
+                return PlaceMapWidget(places: placeProvider.places);
+              },
+              child: PlaceListWidget(places: placeProvider.places),
+            ),
+          ),
+        );
+      },
     );
   }
 }

@@ -21,6 +21,17 @@ if (flutterVersionName == null) {
     flutterVersionName = '1.0'
 }
 
+Properties sensitiveProperties = new Properties()
+def propertiesFile = project.rootProject.file('local_sensitive.properties')
+if (propertiesFile.exists()) {
+    sensitiveProperties.load(propertiesFile.newDataInputStream())
+}
+
+def googleMapsApiKey = sensitiveProperties.getProperty('googleMapsApiKey')
+if (googleMapsApiKey == null) {
+    throw new GradleException("Specify Google Maps Api Key")
+}
+
 apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
 apply from: "$flutterRoot/packages/flutter_tools/gradle/flutter.gradle"
@@ -44,6 +55,7 @@ android {
         versionCode flutterVersionCode.toInteger()
         versionName flutterVersionName
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+        manifestPlaceholders = [googleMapsApiKey: googleMapsApiKey]
     }
 
     buildTypes {
